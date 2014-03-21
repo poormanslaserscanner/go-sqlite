@@ -84,7 +84,7 @@ function save_name = sqlite_save_matrix(dbfile, matrix);
   command_create_table=sprintf('create table ''%s'' (id INTEGER PRIMARY KEY, Value REAL)', save_name);
   sqlite_action(dbfile, command_create_table);
   % write reshape info to id=1
-  command=sprintf('insert into ''%s'' (Value) values (''%f'')', save_name, reshape_info);
+  command=sprintf('insert into ''%s'' (Value) values (''%.8f'')', save_name, reshape_info);
   sqlite_action(dbfile, command);
   % sqlite is limited at one point, so let's write max. 100 values at ones.
   if size(newmatrix,1) > 100
@@ -116,10 +116,11 @@ end
 
 function matrix = sqlite_get_matrix(dbfile, table);
   command=sprintf('select Value from ''%s''', table);
-  matrix=sqlite_action(dbfile,command);
-  matrix=regexp(matrix{1,1},'[eE0-9]+.[eE0-9]+','match');
-  matrix=str2double (matrix)';
-  matrix=reshape(matrix(2:end),matrix(1),[]);
+  tmatrix=sqlite_action(dbfile,command);
+  tmatrix=regexp(tmatrix{1,1},'[-eE0-9]+.[-eE0-9]+','match');
+  tmatrix=str2double (tmatrix)';
+  reshape_info=tmatrix(1);
+  matrix=reshape(tmatrix(2:end),reshape_info,[]);
 end
 
 
