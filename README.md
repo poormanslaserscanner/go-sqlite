@@ -3,6 +3,11 @@ go-sqlite
 
 A simple sqlite wrapper for GNU Octave and Matlab.  
 
+# dependencies
+
+* MATLAB or GNU Octave
+* sqlite3 binary
+
 
 ## Examples
 **NOTE:** the output should always be a cell with strings!
