@@ -114,3 +114,52 @@ It saves in 100 value steps. That means, a 10x10 matrix is safed in one step.
  	   0.2785    0.9572    0.7922    0.6787    0.7060    0.6948    0.7655
 
 
+# Performance
+
+There is almost no speed difference between MATLAB and GNU Octave. But there are significant differences if you read/write to RAM _(tmpfs)_, to an old HDD or to a fast SSD.
+
+#### tmpfs  
+
+Write  
+ 
+    >> tic, sqlite('tmpfs.db','save',rand(25,4)), toc
+    ans = Matrix written to table  go-sqlite-1
+    Elapsed time is 0.141955 seconds.
+    >> tic, sqlite('tmpfs.db','save',rand(100,100)), toc
+    ans = Matrix written to table  go-sqlite-2
+    Elapsed time is 3.16036 seconds.
+
+Read  
+	
+    >> tic, test=sqlite('tmpfs.db','get','go-sqlite-2'); toc
+    Elapsed time is 0.282526 seconds.
+
+#### hdd  
+
+Write
+ 
+    >> tic, sqlite('slowoldhdd.db','save',rand(25,4)), toc
+    ans = Matrix written to table  go-sqlite-1
+    Elapsed time is 2.66365 seconds.
+    >> tic, sqlite('slowoldhdd.db','save',rand(100,100)), toc
+    ans = Matrix written to table  go-sqlite-2
+    Elapsed time is 91.6153 seconds.
+
+Read
+
+    >> tic, test2=sqlite('slowoldhdd.db','get','go-sqlite-2'); toc
+    Elapsed time is 0.292043 seconds.
+
+#### ssd _(different host than tmpfs and hdd test)_
+
+Write
+
+    >> tic, sqlite('tmpfs.db','save',rand(100,100)), toc
+    ans = Matrix written to table  go-sqlite-1
+    Elapsed time is 1.4661 seconds.
+
+Read
+
+    >> tic, test=sqlite('tmpfs.db','get','go-sqlite-1');, toc
+    Elapsed time is 0.106701 seconds.
+
