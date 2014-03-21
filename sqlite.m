@@ -89,21 +89,23 @@ function save_name = sqlite_save_matrix(dbfile, matrix);
   % sqlite is limited at one point, so let's write max. 100 values at ones.
   if size(newmatrix,1) > 100
   % write reshape info to id=1
-    for n = 0:floor(size(newmatrix,1)/100)-1
+    for n = 0:(floor(size(newmatrix,1)/100)-1)
       values_string=sprintf('(''%.8f''),',newmatrix((1:100)+(n*100)));
       values_string=values_string(1:end-1);
       insert_string=sprintf('insert into ''%s'' (Value) values ', save_name);
       command = [insert_string values_string];
       sqlite_action(dbfile, command);  
     end
-    from=((n+1)*100)+1;
-    to=size(newmatrix,1);
-    values_string=sprintf('(''%.8f''),',newmatrix(from:to));
-    values_string=values_string(1:end-1);
-    insert_string=sprintf('insert into ''%s'' (Value) values ', save_name);
-    command = [insert_string values_string];
-    sqlite_action(dbfile, command);
-    save_name = ['Matrix written to table  ' save_name];
+    if ((n+1)*100)~=size(newmatrix,1)
+      from=(((n+1)*100)+1);
+      to=size(newmatrix,1);
+      values_string=sprintf('(''%.8f''),',newmatrix(from:to));
+      values_string=values_string(1:end-1);
+      insert_string=sprintf('insert into ''%s'' (Value) values ', save_name);
+      command = [insert_string values_string];
+      sqlite_action(dbfile, command);
+    end
+      save_name = ['Matrix written to table  ' save_name];
   else
     values_string=sprintf('(''%.8f''),',newmatrix);
     values_string=values_string(1:end-1);
