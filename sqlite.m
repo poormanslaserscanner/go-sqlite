@@ -67,7 +67,8 @@ function new_command = sqlite_parse_new_command(command, value);
 end
 
 function save_name = sqlite_save_matrix(dbfile, matrix);
-  newmatrix=[size(matrix,1); reshape(matrix,[],1)];
+  reshape_info=size(matrix,1);
+  newmatrix=[reshape(matrix,[],1)];
   table_exist=sqlite_action(dbfile,'.tables');
   for n = 1:99
     save_name=sprintf('go-sqlite-%d',n);
@@ -79,27 +80,46 @@ function save_name = sqlite_save_matrix(dbfile, matrix);
       return
     end
   end
+  % create table
   command_create_table=sprintf('create table ''%s'' (id INTEGER PRIMARY KEY, Value REAL)', save_name);
   sqlite_action(dbfile, command_create_table);
-  values_string=sprintf('(''%.8f''),',newmatrix);
-  values_string=values_string(1:end-1);
-  insert_string=sprintf('insert into ''%s'' (Value) values ', save_name);
-  command = [insert_string values_string];
-  sqlite_action(dbfile, command);  
-  save_name = ['Matrix written to table  ' save_name];
+  % write reshape info to id=1
+  command=sprintf('insert into ''%s'' (Value) values (''%f'')', save_name, reshape_info);
+  sqlite_action(dbfile, command);
+  % sqlite is limited at one point, so let's write max. 100 values at ones.
+  if size(newmatrix,1) > 100
+  % write reshape info to id=1
+    for n = 0:floor(size(newmatrix,1)/100)-1
+      values_string=sprintf('(''%.8f''),',newmatrix((1:100)+(n*100)));
+      values_string=values_string(1:end-1);
+      insert_string=sprintf('insert into ''%s'' (Value) values ', save_name);
+      command = [insert_string values_string];
+      sqlite_action(dbfile, command);  
+    end
+    from=(n+1*100)+1;
+    to=size(newmatrix,1);
+    values_string=sprintf('(''%.8f''),',newmatrix(from:to));
+    values_string=values_string(1:end-1);
+    insert_string=sprintf('insert into ''%s'' (Value) values ', save_name);
+    command = [insert_string values_string];
+    sqlite_action(dbfile, command);
+    save_name = ['Matrix written to table  ' save_name];
+  else
+    values_string=sprintf('(''%.8f''),',newmatrix);
+    values_string=values_string(1:end-1);
+    insert_string=sprintf('insert into ''%s'' (Value) values ', save_name);
+    command = [insert_string values_string];
+    sqlite_action(dbfile, command);  
+    save_name = ['Matrix written to table  ' save_name];
+  end
 end
 
 function matrix = sqlite_get_matrix(dbfile, table);
-  command_get_rows = sprintf('select Value from ''%s'' where id=1', table);
-  r = str2double(sqlite_action(dbfile ,command_get_rows));
-  command_get_allrows = sprintf('SELECT COALESCE(MAX(id)+1, 0) FROM ''%s''', table);
-  n = str2double(sqlite_action(dbfile ,command_get_allrows));
-  matrix=zeros(n-2,1);
-  for k = 2:n-1
-    command_read_value=sprintf('select Value from ''%s'' where id=%d', table, k);
-    matrix(k-1,1)=str2double(sqlite_action(dbfile ,command_read_value));
-  end
-  matrix=reshape(matrix,r,[]);
+  command=sprintf('select Value from ''%s''', table);
+  matrix=sqlite_action(dbfile,command);
+  matrix=regexp(matrix{1,1},'[eE0-9]+.[eE0-9]+','match');
+  matrix=str2double (matrix)';
+  matrix=reshape(matrix(2:end),matrix(1),[]);
 end
 
 

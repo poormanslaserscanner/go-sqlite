@@ -82,9 +82,8 @@ Get/read variable id1 from `matrix`
 **NOTE:** Input and output is always a 2D double matrix!
 
 go-sqlite helps to write a matrix into a sqlite database. It will create automaticaly a table called `go-sqlite-XX`.  
-The number of rows is saved in id=1 **(this is an important information for reshape)**. However, it's slow! On Linux, try to save in tmpfs, it's faster _(don't forget to move 
-the file to a more save place then tmps when you're finished)_  8-)  
-Reading is faster _(even when it's not tmpfs)_!
+The number of rows is saved in id=1 **(this is an important information for reshape)**.  
+It saves in 100 value steps. That means, a 10x10 matrix is safed in one step.  
 
 	>> m=rand(6,7)
 	
