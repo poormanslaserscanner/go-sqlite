@@ -1,7 +1,8 @@
 go-sqlite
 =========
 
-A simple sqlite wrapper pure written in Octave and Matlab.
+A simple sqlite wrapper for GNU Octave and Matlab.  
+
 
 ## Examples
 **NOTE:** the output should always be a cell with strings!
@@ -23,7 +24,8 @@ Create `matrix` in `new.db` with column-name `value` and datatype `REAL`
 
     >> sqlite('new.db','create table matrix (id INTEGER PRIMARY KEY, value REAL)');
 
-Insert pi into table `matrix`
+Insert pi into table `matrix`  
+**Yes, always user `%s` for you variable you want to put into the command string!!**
 
     >> sqlite('new.db','insert into matrix (value) values (%s)',pi);
 
@@ -71,8 +73,8 @@ Get/read variable id1 from `matrix`
 **NOTE:** Input and output is always a 2D double matrix!
 
 go-sqlite helps to write a matrix into a sqlite database. It will create automaticaly a table called `go-sqlite-XX`.  
-The number of rows is saved in id=1. However, it's slow! On Linux, try to save in tmpfs, it's faster _(don't forget to move 
-the file to a more save place then tmps)_  8-)  
+The number of rows is saved in id=1 **(this is an important information for reshape)**. However, it's slow! On Linux, try to save in tmpfs, it's faster _(don't forget to move 
+the file to a more save place then tmps when you're finished)_  8-)  
 Reading is faster _(even when it's not tmpfs)_!
 
 	>> m=rand(6,7)
