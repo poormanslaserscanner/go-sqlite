@@ -5,7 +5,7 @@ A simple sqlite wrapper for GNU Octave and Matlab.
 
 `sqlite(dbfile,command,value)`
 
-If you let go-sqlite save the value or a matrix, it currently writes values as `%f.8`.
+If you let go-sqlite save the value or a matrix _(when you said the 3rd input argument)_, it currently writes values as `%.8f`. See examples below.
 
 # dependencies
 
