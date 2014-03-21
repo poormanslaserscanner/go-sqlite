@@ -12,6 +12,11 @@ If you let go-sqlite save the value or a matrix _(when you said the 3rd input ar
 * MATLAB or GNU Octave
 * sqlite3 binary
 
+## todo
+
+* add write support for multidimensional matrix?!
+* add write support for complex matrix?!
+* write documentation into the .m file
 
 ## Examples
 **NOTE:** the output should always be a cell with strings!
@@ -150,7 +155,7 @@ Read
     >> tic, test2=sqlite('slowoldhdd.db','get','go-sqlite-2'); toc
     Elapsed time is 0.292043 seconds.
 
-#### ssd _(different host than tmpfs and hdd test)_
+#### ssd _(different (faster) host than tmpfs and hdd test)_
 
 Write
 
