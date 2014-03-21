@@ -96,7 +96,8 @@ function save_name = sqlite_save_matrix(dbfile, matrix);
       command = [insert_string values_string];
       sqlite_action(dbfile, command);  
     end
-    from=(n+1*100)+1;
+disp('last')
+    from=((n+1)*100)+1;
     to=size(newmatrix,1);
     values_string=sprintf('(''%.8f''),',newmatrix(from:to));
     values_string=values_string(1:end-1);
