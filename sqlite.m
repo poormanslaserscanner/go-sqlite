@@ -81,11 +81,11 @@ function save_name = sqlite_save_matrix(dbfile, matrix);
   end
   command_create_table=sprintf('create table ''%s'' (id INTEGER PRIMARY KEY, Value REAL)', save_name);
   sqlite_action(dbfile, command_create_table);
-  for n = 1:size(newmatrix,1)
-    command = sprintf('insert into ''%s'' (Value) values (%s)', save_name, ['''' num2str(newmatrix(n,1), '%.8f') '''']);
-    sqlite_action(dbfile, command);
-  end
-  
+  values_string=sprintf('(''%.8f''),',newmatrix);
+  values_string=values_string(1:end-1);
+  insert_string=sprintf('insert into ''%s'' (Value) values ', save_name);
+  command = [insert_string values_string];
+  sqlite_action(dbfile, command);  
   save_name = ['Matrix written to table  ' save_name];
 end
 
