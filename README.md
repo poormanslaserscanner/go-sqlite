@@ -129,7 +129,7 @@ Happy parsing :)
 
 # Performance
 
-Writing is slow if your database file is located on a hard disk (hdd). Furthermore, if you're using `save` commands, go-sqlite can write max. 100 values at ones. This is the disadvantage of using the sqlite3 binary.    
+Writing is slow if your database file is located on a hard disk (hdd). Furthermore, if you're using `save` commands, go-sqlite can write max. 100 values at ones _(e.g. it do 3 writes for a 15x10 matrx. 1st write is the dimension, 2nd write the first 100 values and the 3rd write are the last 50 values)_. This is the disadvantage of using the sqlite3 binary.    
 Reading is much faster than writing.  
 
 On Linux, you can locate your database file to tmpfs. It's probably the fastest methode.  
