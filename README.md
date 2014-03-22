@@ -8,6 +8,19 @@ A simple sqlite wrapper for GNU Octave and Matlab.
 * MATLAB or GNU Octave
 * sqlite3 binary
 
+# usage/installation.
+
+Download .zip and extract or clone from github.  
+Simple add the go-sqlite folder to the search path.
+
+    >> ls
+    go-sqlite
+    >> ls go-sqlite
+    README.md  @sqlite
+    >> addpath('go-sqlite/')
+
+
+
 ## todo
 
 * add write support for multidimensional matrix?!
