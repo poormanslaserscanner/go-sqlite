@@ -1,9 +1,5 @@
 function obj = sqlite(varargin)
-
-  % Constructor for a dummy class object.
-  % You must always pass one argument if you want to create a new object.
-
-  if nargin==0 % Used when objects are loaded from disk
+  if nargin==0
     error('nothing to do here')
     return
   end
@@ -13,11 +9,6 @@ function obj = sqlite(varargin)
     obj = class(obj, 'sqlite');
     obj.file = sqlite_check(varargin{1})
   end
-
-  % attach class name tag, so we can call member functions to
-  % do any initial setup
-  % obj = class(obj, 'sqlite');
-
 end
 
 function obj = init_fields()
