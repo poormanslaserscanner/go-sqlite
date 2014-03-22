@@ -102,7 +102,8 @@ Example:
 _save(obj, table, matrix)_
 
 `save` allows you to store a 2D double matrix. **(%.8f) persicion)**.    
-The matrix will be reshaped to a one column matrix. The reshape information is stored at the first place _(id=1)_.
+The matrix will be reshaped to a one column matrix. The reshape information _(number of rows)_ is stored at the first place _(id=1)_.  
+The column Name for the matrix value is `go_sqlite`, the datatype is `REAL`.
 
     >> m=rand(5,5);
     >> save(s,'m',m)
