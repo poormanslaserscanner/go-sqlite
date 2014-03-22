@@ -3,10 +3,6 @@ go-sqlite
 
 A simple sqlite wrapper for GNU Octave and Matlab.  
 
-`sqlite(dbfile,command,value)`
-
-If you let go-sqlite save the value or a matrix _(when you said the 3rd input argument)_, it currently writes values as `%.8f`. See examples below.
-
 # dependencies
 
 * MATLAB or GNU Octave
@@ -16,155 +12,129 @@ If you let go-sqlite save the value or a matrix _(when you said the 3rd input ar
 
 * add write support for multidimensional matrix?!
 * add write support for complex matrix?!
-* write documentation into the .m file
+* write documentation into the .m file :)
 
-## Examples
-**NOTE:** the output should always be a cell with strings!
+# Documentation
 
-Create `table1` in `new.db`  
+#### Open a sqlite session
 
-    >> sqlite('new.db','create table table1 (id INTEGER PRIMARY KEY, Name TEXT, Animal TEXT, Job TEXT)');
+It doesn't matter if the file exist or not.
 
-Insert values in `table1`
+    >> s=sqlite('new.db');
+    obj = <class sqlite>
 
-    >> sqlite('new.db','insert into table1 (Name, Animal, Job) values (''Chris'',''Cat'',''Clown'')');
 
-Select everything in `table1`
+#### fprintf
 
-    >> sqlite('new.db','select * from table1')
-    ans = 1|Chris|Cat|Clown
+_fprintf(obj, string, value)_
 
-Create `matrix` in `new.db` with column-name `value` and datatype `REAL`
+Add a new table called `table1` with 3 TEXT columns
 
-    >> sqlite('new.db','create table matrix (id INTEGER PRIMARY KEY, value REAL)');
+fprintf has always two output arguments. If the first output is 0, everything is fine.
 
-Insert pi into table `matrix`  
-**Yes, always user `%s` for you variable you want to put into the command string!!**
-
-    >> sqlite('new.db','insert into matrix (value) values (%s)',pi);
-
-Display all tables in `new.db` 
-
-    >> sqlite('new.db','.tables')
-    ans = table1  matrix
-
-List columns in table `matrix`
-
-	>> a=sqlite('new.db','pragma table_info(matrix)')
-	
-	a = 
-	
-    	[1x36 char]
-	
-	>> a{1,1}
-	
-	ans =
-	
-	0|id|INTEGER|0||1
-	1|Value|REAL|0||0
-	Select everything in `table2`
-	
-    >> sqlite('new.db','select * from matrix')
-	ans =
-	{
-	  [1,1] = 1|3.14159265
-
-	}
+    >> [status,output]=fprintf(s,'create table table1 (id INTEGER PRIMARY KEY, Name TEXT, Animal TEXT, Job TEXT)')
+    status =                    0
+    output =
     
+    >> [status,output]=fprintf(s,'.tables')
+    status =                    0
+    output = table1
 
-Get/read variable id1 from `matrix`
+Add some values to `table1`
+
+    >> fprintf(s,'insert into table1 (Name, Animal, Job) values (''Chris'',''Cat'',''Clown'')');
+
+You can use one variable for parsing into your string. The variable can be a string or a double number. But it's important that you mark the place in both case with **%s**.
+
+    >> str='(''Alf'',''Ape'',''Astronaut'')'
+    str = ('Alf','Ape','Astronaut')
+    >> fprintf(s,'insert into table1 (Name, Animal, Job) values %s',str);
+
+`table1` looks now like that.
+
+    >> [~,out]=fprintf (s,'select * from table1')
+    out = 1|Chris|Cat|Clown
+    2|Alf|Ape|Astronaut
 
 
-	>> sqlite('new.db','select Value from matrix where id=1')
-	ans =
-	{
-	  [1,1] = 3.141593
+#### fread,fwrite,fprintf
 
-	}
+This three functions do the same, except for the number of outputs.
+
+`[status,output]=fprintf(...)` reply with status and output.  
+`[output]=fread(...)` reply only with the output.  
+`[status]=fwrite(...)` answeres only with the status.
+
+Example:
+
+    >> [status,output]=fprintf(s,'pragma table_info(table1)')
+    status =                    0
+    output = 0|id|INTEGER|0||1
+    1|Name|TEXT|0||0
+    2|Animal|TEXT|0||0
+    3|Job|TEXT|0||0
+    
+    >> fread(s,'pragma table_info(table1)')
+    ans = 0|id|INTEGER|0||1
+    1|Name|TEXT|0||0
+    2|Animal|TEXT|0||0
+    3|Job|TEXT|0||0
+    
+    >> fwrite(s,'pragma table_info(table1)')
+    ans =                    0
 
 
-## Write a matrix to a database.
-**NOTE:** Input and output is always a 2D double matrix!
+#### save
 
-go-sqlite helps to write a matrix into a sqlite database. It will create automaticaly a table called `go-sqlite-XX`.  
-The number of rows is saved in id=1 **(this is an important information for reshape)**.  
-It saves in 100 value steps. That means, a 10x10 matrix is safed in one step.  
+_save(obj, table, matrix)_
 
-	>> m=rand(6,7)
-	
-	m =
-	
-	    0.9058    0.5469    0.4854    0.9595    0.7577    0.0318    0.3171
-	    0.1270    0.9575    0.8003    0.6557    0.7431    0.2769    0.9502
-	    0.9134    0.9649    0.1419    0.0357    0.3922    0.0462    0.0344
-	    0.6324    0.1576    0.4218    0.8491    0.6555    0.0971    0.4387
-	    0.0975    0.9706    0.9157    0.9340    0.1712    0.8235    0.3816
-	    0.2785    0.9572    0.7922    0.6787    0.7060    0.6948    0.7655
-	
-	>> sqlite('m.db','save',m)
-	
-	ans =
-	
-	Matrix written to table go-sqlite-1
-	
-	>> n=sqlite('m.db','get','go-sqlite-1')
-	
-	n =
-	
-	   0.9058    0.5469    0.4854    0.9595    0.7577    0.0318    0.3171
- 	   0.1270    0.9575    0.8003    0.6557    0.7431    0.2769    0.9502
- 	   0.9134    0.9649    0.1419    0.0357    0.3922    0.0462    0.0344
- 	   0.6324    0.1576    0.4218    0.8491    0.6555    0.0971    0.4387
- 	   0.0975    0.9706    0.9157    0.9340    0.1712    0.8235    0.3816
- 	   0.2785    0.9572    0.7922    0.6787    0.7060    0.6948    0.7655
+`save` allows you to store a 2D double matrix. **(%.8f) persicion)**.    
+The matrix will be reshaped to a one column matrix. The reshape information is stored at the first place _(id=1)_.
+
+    >> m=rand(5,5);
+    >> save(s,'m',m)
+    ans = m
+
+It replies with just with the name of the written table.  
+
+    >> fread(s,'pragma table_info(m)')
+    ans = 0|id|INTEGER|0||1
+    1|Value|REAL|0||0
+
+#### load
+
+_load(obj, table)_
+
+`load` can read a table which is written by `save`. It's more or less auto deteced. 
+
+    >> n=load(s,'m');
+
+If the typical table structure is not found, it will read the table into one cell.
+
+    >> cell=load(s,'table1')
+    cell =
+    {
+      [1,1] = 1
+      [2,1] = 2
+      [1,2] = Chris
+      [2,2] = Alf
+      [1,3] = Cat
+      [2,3] = Ape
+      [1,4] = Clown
+      [2,4] = Astronaut
+    }
+
+Happy parsing :)
 
 
 # Performance
 
-There is almost no speed difference between MATLAB and GNU Octave. But there are significant differences if you read/write to RAM _(tmpfs)_, to an old HDD or to a fast SSD.
+Writing is slow if your database file is located on a hard disk (hdd). Furthermore, if you're using `save` commands, go-sqlite can write max. 100 values at ones. This is the disadvantage of using the sqlite3 binary.    
+Reading is much faster than writing.  
 
-#### tmpfs  
+On Linux, you can locate your database file to tmpfs. It's probably the fastest methode.  
+How ever, on modern hosts with SSD storage, if's fairly fast too.
 
-Write  
- 
-    >> tic, sqlite('tmpfs.db','save',rand(25,4)), toc
-    ans = Matrix written to table  go-sqlite-1
-    Elapsed time is 0.141955 seconds.
-    >> tic, sqlite('tmpfs.db','save',rand(100,100)), toc
-    ans = Matrix written to table  go-sqlite-2
-    Elapsed time is 3.16036 seconds.
+If it's even to slow for your needs, try another database, e.g. redis with [go-redis](https://github.com/markuman/go-redis).
 
-Read  
-	
-    >> tic, test=sqlite('tmpfs.db','get','go-sqlite-2'); toc
-    Elapsed time is 0.282526 seconds.
-
-#### hdd  
-
-Write
- 
-    >> tic, sqlite('slowoldhdd.db','save',rand(25,4)), toc
-    ans = Matrix written to table  go-sqlite-1
-    Elapsed time is 2.66365 seconds.
-    >> tic, sqlite('slowoldhdd.db','save',rand(100,100)), toc
-    ans = Matrix written to table  go-sqlite-2
-    Elapsed time is 91.6153 seconds.
-
-Read
-
-    >> tic, test2=sqlite('slowoldhdd.db','get','go-sqlite-2'); toc
-    Elapsed time is 0.292043 seconds.
-
-#### ssd _(different (faster) host than tmpfs and hdd test)_
-
-Write
-
-    >> tic, sqlite('tmpfs.db','save',rand(100,100)), toc
-    ans = Matrix written to table  go-sqlite-1
-    Elapsed time is 1.4661 seconds.
-
-Read
-
-    >> tic, test=sqlite('tmpfs.db','get','go-sqlite-1');, toc
-    Elapsed time is 0.106701 seconds.
 
