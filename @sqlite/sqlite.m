@@ -7,7 +7,7 @@ function obj = sqlite(varargin)
   if nargin==1
     obj = init_fields;
     obj = class(obj, 'sqlite');
-    obj.file = sqlite_check(varargin{1})
+    obj.file = sqlite_check(varargin{1});
   end
 end
 
