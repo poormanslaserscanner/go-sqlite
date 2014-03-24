@@ -142,7 +142,7 @@ Happy parsing :)
 
 #### runsqlscript
 
-__runsqlscript(obj, inputfile)__
+_runsqlscript(obj, inputfile)_
 
 You can simply apply sql scripts to your database like that
 
@@ -150,7 +150,7 @@ You can simply apply sql scripts to your database like that
 
 #### sqldump
 
-__sqldump(obj, outputfile)__
+_sqldump(obj, outputfile)_
 
 You can simply dump (export) your sqlite database as sql file.
 
@@ -159,7 +159,7 @@ You can simply dump (export) your sqlite database as sql file.
 
 #### insert
 
-__insert(obj, table, column, data)__
+_insert(obj, table, column, data)_
 
 Simple insert function as find in matlab database toolbox.  
 table and column should be strings. data can be a string or double.
