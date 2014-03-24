@@ -140,6 +140,32 @@ If the typical table structure is not found, it will read the table into one cel
 
 Happy parsing :)
 
+#### runsqlscript
+
+__runsqlscript(obj, inputfile)__
+
+You can simply apply sql scripts to your database like that
+
+    >> status = runsqlscript(s,'../sqlitescript.sql' );
+
+#### sqldump
+
+__sqldump(obj, outputfile)__
+
+You can simply dump (export) your sqlite database as sql file.
+
+    >> status = sqldump(s,'dump.sql');
+
+
+#### insert
+
+__insert(obj, table, column, data)__
+
+Simple insert function as find in matlab database toolbox.  
+table and column should be strings. data can be a string or double.
+
+
+
 
 # Performance
 
