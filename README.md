@@ -74,9 +74,9 @@ You can use one variable for parsing into your string. The variable can be a str
 
 This three functions do the same, except for the number of outputs.
 
-`[status,output]=fprintf(...)` reply with status and output.  
-`[output]=fread(...)` reply only with the output.  
-`[status]=fwrite(...)` answeres only with the status.
+`[status,output]=fprintf(...)` answer is status and output.  
+`[output]=fread(...)` answer is only the output.  
+`[status]=fwrite(...)` answer is only the status.
 
 Example:
 
@@ -103,13 +103,12 @@ _save(obj, table, matrix)_
 
 `save` allows you to store a 2D double matrix. **(%.8f) persicion)**.    
 The matrix will be reshaped to a one column matrix. The reshape information _(number of rows)_ is stored at the first place _(id=1)_.  
-The column Name for the matrix value is `go_sqlite`, the datatype is `REAL`.
+The column Name for the matrix value is `go_sqlite`, the datatype is `REAL`. 
 
     >> m=rand(5,5);
     >> save(s,'m',m)
     ans = m
 
-It replies with just with the name of the written table.  
 
     >> fread(s,'pragma table_info(m)')
     ans = 0|id|INTEGER|0||1
