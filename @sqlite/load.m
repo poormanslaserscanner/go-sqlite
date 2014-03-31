@@ -1,27 +1,27 @@
 function out=load(obj, table)
-  [~,available_table]=system(sprintf('sqlite3 %s "pragma table_info(%s)"', obj.file, table));
+  [~,available_table]=system(sprintf('%s %s "pragma table_info(%s)"', obj.path, obj.file, table));
   known_go_sqlite_default_matrix=[48,124,105,100,124,73,78,84,69,71,69,82,124,48,124,124,49,10,49,124,103,111,95,115,113,108,105,116,101,124,82,69,65,76,124,48,124,124,48,10];
   if isequal(known_go_sqlite_default_matrix, int8(available_table))
-    out = sqlite_get_matrix(obj.file, table);
+    out = sqlite_get_matrix(obj.path, obj.file, table);
   else
     % try read table1 into a cell
-    out = sqlite_table2cell(obj.file,table);
+    out = sqlite_table2cell(obj.path, obj.file,table);
   end
 end
 
-function matrix = sqlite_get_matrix(dbfile, table);
+function matrix = sqlite_get_matrix(path, dbfile, table)
   command=sprintf('select go_sqlite from "%s"', table);
-  [~,tmatrix]=system(sprintf('sqlite3 %s "%s"', dbfile, command));
+  [~,tmatrix]=system(sprintf('%s %s "%s"', path, dbfile, command));
   tmatrix=regexp(tmatrix,'[-eE0-9]+.[-eE0-9]+','match');
   tmatrix=str2double (tmatrix)';
   reshape_info=tmatrix(1);
   matrix=reshape(tmatrix(2:end),reshape_info,[]);
 end
 
-function cell = sqlite_table2cell(dbfile, table);
-  [~,col_string]=system(sprintf('sqlite3 %s "select * from ("%s") where id=1"', dbfile, table));
+function cell = sqlite_table2cell(path, dbfile, table)
+  [~,col_string]=system(sprintf('%s %s "select * from ("%s") where id=1"', path, dbfile, table));
   col_num=numel(strfind(col_string,'|'));
-  [~,raw_data]=system(sprintf('sqlite3 %s "select * from ("%s")"', dbfile,table));
+  [~,raw_data]=system(sprintf('%s %s "select * from ("%s")"', path, dbfile,table));
   first_pattern='(\w+)'; % let's hope the first column is ID
   rest_pattern=repmat('\|(.*?)',1,col_num);
   pattern=[first_pattern rest_pattern '\n'];

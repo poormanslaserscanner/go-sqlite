@@ -4,7 +4,7 @@ function status = insert(obj, table, column, data)
     if ~ischar(data)
       data=num2str(data);
     end
-    [status,~] = system(sprintf('sqlite3 %s "insert into %s (%s) values (''%s'')"', obj.file, table, column, data));
+    [status,~] = system(sprintf('%s %s "insert into %s (%s) values (''%s'')"', obj.path, obj.file, table, column, data));
   else
     error('Wrong usage')
     print_help

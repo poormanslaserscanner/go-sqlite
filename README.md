@@ -26,6 +26,7 @@ Simple add the go-sqlite folder to the search path.
 * add write support for multidimensional matrix?!
 * add write support for complex matrix?!
 * write documentation into the .m file :)
+* write .c/mex file
 
 # Documentation
 
@@ -35,6 +36,11 @@ It doesn't matter if the file exist or not.
 
     >> s=sqlite('new.db');
     obj = <class sqlite>
+
+If you're using Windows and Matlab, you probably use the sqlite-shell binary from sqlite.org.
+
+    >> path_to_binary=[pwd 'sqlite-shell-win32-x86-3080402']; % absolute path. Should work with relative path too.
+    >> s=sqlite('new.db', path_to_binary);
 
 
 #### fprintf

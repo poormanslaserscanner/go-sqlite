@@ -4,10 +4,10 @@ function output=fread(obj, string, value)
       print_help
       return
     case 2
-      [~,output]=system(sprintf('sqlite3 %s "%s"', obj.file, string));
+      [~,output]=system(sprintf('%s %s "%s"', obj.path, obj.file, string));
     case 3
       command=sqlite_parse_new_command(string, value);
-      [~,output]=system(sprintf('sqlite3 %s "%s"', obj.file, command));
+      [~,output]=system(sprintf('%s %s "%s"', obj.path, obj.file, command));
     otherwise
       print_help
       return
