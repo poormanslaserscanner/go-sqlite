@@ -6,6 +6,6 @@ Maintainer: Markus Bergholz <markuman+github@gmail.com>
 Title: SQLite Toolbox
 Description: SQLite 3 Database Toolbox
 Categories: database
-Depends: octave
+Depends: 
 Autoload: no
-License: .
+License: 
