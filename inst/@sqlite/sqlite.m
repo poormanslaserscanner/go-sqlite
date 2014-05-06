@@ -10,13 +10,17 @@ function obj = sqlite(varargin)
     obj.file = sqlite_check(varargin{1});
     obj.path = 'sqlite3';
   elseif nargin == 2
-    obj = init_fields;
-    obj = class(obj, 'sqlite');
-    obj.file = sqlite_check_extended(varargin{1},varargin{2});
-    if ispc == 1
-      obj.path = [varargin{2} '\\sqlite3'];
+    if strcmp(tolower(varargin{1}),'setup') && strcmp(tolower(varargin{2}),'binary')
+      get_sqlite_binary
     else
-      obj.path = [varargin{2} '/sqlite3'];
+      obj = init_fields;
+      obj = class(obj, 'sqlite');
+      obj.file = sqlite_check_extended(varargin{1},varargin{2});
+      if ispc == 1
+        obj.path = [varargin{2} '\\sqlite3'];
+      else
+        obj.path = [varargin{2} '/sqlite3'];
+      end
     end
   end
 end
@@ -64,3 +68,17 @@ function file=sqlite_check_extended(dbfile, path)
   file=dbfile;
 end
 
+
+function status = get_sqlite_binary()
+  install_dir = [fileparts(mfilename ('fullpath')) '/private'];
+  if ispc == 1
+    % urlwrite nach tmp oder install_dir
+    % unzip nach install_dir oder binary nach install_dir verschiebe
+  elseif ismac == 1
+    % ??
+  else
+    % parse /etc/os-release
+  end
+
+
+end

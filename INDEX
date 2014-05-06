@@ -1,0 +1,7 @@
+go-sqlite >> sqlite 3 toolbox
+Sqlite
+  insert
+  runsqlscript
+  sqldump
+  sqlite
+
