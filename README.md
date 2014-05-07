@@ -1,32 +1,35 @@
 go-sqlite
 =========
 
-A simple sqlite wrapper for GNU Octave and Matlab.  
+a simple sqlite 3 toolbox for GNU Octave and Matlab.  
 
-# dependencies
+# KEYFEATURES
+
+* easily save 2-dimensional matrix
+* automatic variablename as table name _(optional: name your tablename)_
+* save supports struct arrays _(depth 1.  m.meter=rand(2,3); ✔  m.kg.g=r(2,3); ✘ )_
+
+# DEPENDENCIES
 
 * MATLAB or GNU Octave
 * sqlite3 binary
 
-# usage/installation.
+# INSTALLATION
 
-Download .zip and extract or clone from github.  
-Simple add the go-sqlite folder to the search path.
+Download master.zip and extract or clone from github.  
+Simple add the go-sqlite/inst folder to the search path.
 
     >> ls
     go-sqlite
     >> ls go-sqlite
-    README.md  @sqlite
-    >> addpath('go-sqlite/')
+    README.md  inst src doc @sqlite
+    >> addpath('go-sqlite/inst')
 
+Using Linux? `apt-get install sqlite3` or `pacman -S sqlite`  
+If you're using Windows and Matlab, you probably have to use the sqlite-shell binary from sqlite.org.
 
-
-## todo
-
-* add write support for multidimensional matrix?!
-* add write support for complex matrix?!
-* write documentation into the .m file :)
-* write .c/mex file
+    >> path_to_binary=[pwd 'sqlite-shell-win32-x86-3080402']; % absolute path. Should work with relative path too.
+    >> s=sqlite('new.db', path_to_binary);
 
 # Documentation
 
@@ -35,17 +38,10 @@ Simple add the go-sqlite folder to the search path.
 It doesn't matter if the file exist or not.
 
     >> s=sqlite('new.db');
-    obj = <class sqlite>
-
-If you're using Windows and Matlab, you probably use the sqlite-shell binary from sqlite.org.
-
-    >> path_to_binary=[pwd 'sqlite-shell-win32-x86-3080402']; % absolute path. Should work with relative path too.
-    >> s=sqlite('new.db', path_to_binary);
-
 
 #### fprintf
 
-_fprintf(obj, string, value)_
+`[status, output]=fprintf(obj, string, value)`
 
 Add a new table called `table1` with 3 TEXT columns
 
@@ -63,7 +59,8 @@ Add some values to `table1`
 
     >> fprintf(s,'insert into table1 (Name, Animal, Job) values (''Chris'',''Cat'',''Clown'')');
 
-You can use one variable for parsing into your string. The variable can be a string or a double number. But it's important that you mark the place in both case with **%s**.
+You can use one variable for parsing into your string. The variable can be a string or a double number. But it's important that you mark the place in both case 
+with **%s**.
 
     >> str='(''Alf'',''Ape'',''Astronaut'')'
     str = ('Alf','Ape','Astronaut')
@@ -105,24 +102,25 @@ Example:
 
 #### save
 
-_save(obj, table, matrix)_
+`save(obj, data)`  
+`save(obj, 'table_name', data)`
 
-`save` allows you to store a 2D double matrix. **(%.8f) persicion)**.    
+`save` allows you to store a 2D double matrix. **(%.8f) persicion)** or a struct full of matrices.      
 The matrix will be reshaped to a one column matrix. The reshape information _(number of rows)_ is stored at the first place _(id=1)_.  
 The column Name for the matrix value is `go_sqlite`, the datatype is `REAL`. 
 
     >> m=rand(5,5);
-    >> save(s,'m',m)
-    ans = m
+    >> save(s,'mytable',m)
+    >> save(s,m) % will be stored as tablename 'm'
 
 
-    >> fread(s,'pragma table_info(m)')
+    >> fread(s,'pragma table_info(mytable)')
     ans = 0|id|INTEGER|0||1
     1|Value|REAL|0||0
 
 #### load
 
-_load(obj, table)_
+`load(obj, table)`
 
 `load` can read a table which is written by `save`. It's more or less auto deteced. 
 
@@ -147,7 +145,7 @@ Happy parsing :)
 
 #### runsqlscript
 
-_runsqlscript(obj, inputfile)_
+`runsqlscript(obj, inputfile)`
 
 You can simply apply sql scripts to your database like that
 
@@ -155,7 +153,7 @@ You can simply apply sql scripts to your database like that
 
 #### sqldump
 
-_sqldump(obj, outputfile)_
+`sqldump(obj, outputfile)`
 
 You can simply dump (export) your sqlite database as sql file.
 
@@ -164,22 +162,31 @@ You can simply dump (export) your sqlite database as sql file.
 
 #### insert
 
-_insert(obj, table, column, data)_
+`insert(obj, table, column, data)`
 
 Simple insert function as find in matlab database toolbox.  
 table and column should be strings. data can be a string or double.
 
 
+#### tables
+
+`tables(obj)`
+
+List all available talbes in the database.
 
 
 # Performance
 
-Writing is slow if your database file is located on a hard disk (hdd). Furthermore, if you're using `save` commands, go-sqlite can write max. 100 values at ones _(e.g. it do 3 writes for a 15x10 matrx. 1st write is the dimension, 2nd write the first 100 values and the 3rd write are the last 50 values)_. This is the disadvantage of using the sqlite3 binary.    
+Writing is slow if your database file is located on a hard disk (hdd). Furthermore, if you're using `save` commands, go-sqlite can write max. 100 values at 
+ones _(e.g. it do 3 writes for a 15x10 matrx. 1st write is the dimension, 2nd write the first 100 values and the 3rd write are the last 50 values)_. This is 
+the disadvantage of using the sqlite3 binary.    
 Reading is much faster than writing.  
 
 On Linux, you can locate your database file to tmpfs. It's probably the fastest methode.  
 How ever, on modern hosts with SSD storage, if's fairly fast too.
 
 If it's even to slow for your needs, try another database, e.g. redis with [go-redis](https://github.com/markuman/go-redis).
+
+
 
 
