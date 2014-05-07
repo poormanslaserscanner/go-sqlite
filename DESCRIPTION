@@ -8,4 +8,4 @@ Description: SQLite 3 Database Toolbox
 Categories: database
 Depends: 
 Autoload: no
-License: 
+License: WTFPL
