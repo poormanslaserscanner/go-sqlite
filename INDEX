@@ -4,3 +4,4 @@ Sqlite
   runsqlscript
   sqldump
   sqlite
+  tables
