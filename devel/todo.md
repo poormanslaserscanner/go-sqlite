@@ -4,7 +4,6 @@ http://stackoverflow.com/questions/7857308/easiest-way-to-serialize-multi-dimens
 roadmap:  
 * version 1.xxxxxx
  * save cells
- * load complete database into workspace
 * version 2.xxxxxx
  * add options to the class
  * "ego" + "coop" mode
