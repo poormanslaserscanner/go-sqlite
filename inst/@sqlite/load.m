@@ -1,18 +1,33 @@
 function out=load(obj, tablename)
-  if nargin == 1
-    %% TODO: read in complete database!
-    % parse tables(obj) and loop it
+  if nargin == 1 && nargout == 0
+    %% load all tables in database to the workspace
+    [~,tablenames]=system(sprintf('%s %s ".tables"', obj.path, obj.file));
+    tablenames=regexp(tablenames,'[\w.-_:]+ ','match');
+    for n=1:size(tablenames,2)
+      varout = read_table(obj, strtrim(tablenames{n}));
+
+      %% assignin can't save structs...ugly workaround
+      if numel(strfind (tablenames{1,n},'.')) > 0
+        assignin('base','dasistdochkeinnamefuereinevariable',varout);
+        evalin('base',sprintf('%s = dasistdochkeinnamefuereinevariable;',tablenames{n}));
+        evalin('base','clear dasistdochkeinnamefuereinevariable');
+      else
+        assignin('base', strtrim(tablenames{n}), varout); 
+      end
+    end
+
   elseif nargin == 2
+    % just load named table
     varout = read_table(obj, tablename);
+
+    if nargout == 0
+      % load table to the workspace
+      assignin('base', tablename, varout);
+    else
+      out = varout;
+    end
   end
 
-  % When not out variable is set, save automatically in workspace
-  % otherwise save to out variable
-  if nargout == 0
-    assignin('base', tablename, varout);
-  else
-    out = varout;
-  end
 end
 
 function varout = read_table(obj, tablename)
