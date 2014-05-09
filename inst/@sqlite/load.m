@@ -1,11 +1,28 @@
-function out=load(obj, table)
-  [~,available_table]=system(sprintf('%s %s "pragma table_info([%s])"', obj.path, obj.file, table));
+function out=load(obj, tablename)
+  if nargin == 1
+    %% TODO: read in complete database!
+    % parse tables(obj) and loop it
+  elseif nargin == 2
+    varout = read_table(obj, tablename);
+  end
+
+  % When not out variable is set, save automatically in workspace
+  % otherwise save to out variable
+  if nargout == 0
+    assignin('base', tablename, varout);
+  else
+    out = varout;
+  end
+end
+
+function varout = read_table(obj, tablename)
+  [~,available_table]=system(sprintf('%s %s "pragma table_info([%s])"', obj.path, obj.file, tablename));
   known_go_sqlite_default_matrix=[48,124,105,100,124,73,78,84,69,71,69,82,124,48,124,124,49,10,49,124,103,111,95,115,113,108,105,116,101,124,82,69,65,76,124,48,124,124,48,10];
   if isequal(known_go_sqlite_default_matrix, int8(available_table))
-    out = sqlite_get_matrix(obj.path, obj.file, table);
+    varout = sqlite_get_matrix(obj.path, obj.file, tablename);
   else
     % try read table1 into a cell
-    out = sqlite_table2cell(obj.path, obj.file,table);
+    varout = sqlite_table2cell(obj.path, obj.file,tablename);
   end
 end
 
