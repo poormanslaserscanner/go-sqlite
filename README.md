@@ -127,6 +127,7 @@ The column Name for the matrix value is `go_sqlite`, the datatype is `REAL`.
 
     >> load(s,'m'); % will assign table 'm' as variablename 'm' to the workspace
     >> n=load(s,'m'); 
+    >> load(s) % this will load all tables from the database to the workspace
 
 
 If the typical table structure is not found, it will read the table into one cell.
