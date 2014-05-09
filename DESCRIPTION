@@ -1,6 +1,6 @@
 Name: go-sqlite
-Version: 1
-Date: 2014-05-06
+Version: 1.140509
+Date: 2014-05-09
 Author: Markus Bergholz<markuman+github@gmail.com>
 Maintainer: Markus Bergholz <markuman+github@gmail.com>
 Title: SQLite Toolbox

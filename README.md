@@ -120,11 +120,14 @@ The column Name for the matrix value is `go_sqlite`, the datatype is `REAL`.
 
 #### load
 
-`load(obj, table)`
+`load(obj, tablename)`  
+`out=load(obj, tablename)`
 
 `load` can read a table which is written by `save`. It's more or less auto deteced. 
 
-    >> n=load(s,'m');
+    >> load(s,'m'); % will assign table 'm' as variablename 'm' to the workspace
+    >> n=load(s,'m'); 
+
 
 If the typical table structure is not found, it will read the table into one cell.
 
