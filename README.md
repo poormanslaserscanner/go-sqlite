@@ -173,9 +173,21 @@ table and column should be strings. data can be a string or double.
 
 #### tables
 
-`tables(obj)`
+`[parsed, unparsed]=tables(obj)`
 
 List all available talbes in the database.
+
+    octave:3> tables(s)
+    ans = 
+    {
+      [1,1] = m.km 
+      [1,2] = m.points 
+      [1,3] = matrix 
+      [1,4] = table1 
+    }
+    octave:4> [~,raw]=tables(s)
+    raw = m.km       m.points   matrix     table1     usernames
+
 
 
 # Performance
