@@ -3,6 +3,16 @@ go-sqlite
 
 a simple sqlite 3 toolbox for GNU Octave and Matlab.  
 
+# Versions
+
+* Version 1.140510 - Stable [EOL]
+ * `git checkout 6de4ba3684`
+ * 2.xxxxxx will have complete different table/column structure!
+* Version 2.xxxxxx 
+ * `git checkout dev`
+ * currently under developement
+
+
 # KEYFEATURES
 
 * easily save 2-dimensional matrix
