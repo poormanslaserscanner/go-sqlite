@@ -12,6 +12,15 @@ function save(obj, varargin)
     data=varargin{2};
   end
 
+
+	if strcmp(obj.mode,'coop')
+		status = coop_sqlite(obj, data, tablename);
+	else
+		status = ego_sqlite(obj, data, tablename);
+	end
+end
+
+function status = coop_sqlite(obj, data, tablename);
 	%% is data == struct
   if isstruct(data)
     f=fieldnames(data);
@@ -32,6 +41,7 @@ function save(obj, varargin)
   
   if iscell(data)
   	%% check for nested cells
+  	%% FIXME: if table already exist!!
   	tmp=cellfun(@iscell, data);
   	if sum(tmp(:))~=0
   		error('nested cells are not supported in this mode')
