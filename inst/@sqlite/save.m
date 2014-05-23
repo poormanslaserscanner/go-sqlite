@@ -1,4 +1,5 @@
 function save(obj, varargin)
+	%% parsing input arguments
   if nargin == 2
     data=varargin{1};
     tablename=inputname(2);
@@ -11,6 +12,7 @@ function save(obj, varargin)
     data=varargin{2};
   end
 
+	%% is data == struct
   if isstruct(data)
     f=fieldnames(data);
     for n = 1:numel(f)
@@ -22,9 +24,51 @@ function save(obj, varargin)
     end
   end
 
+	%% is data == matrix
+	%% FIXME: matlab: ismatrix(rand(3,3,3)) = false !!!!
   if ismatrix(data) && numel(size(data))<=2 && ischar(tablename)
     out=sqlite_save_matrix(obj.path, obj.file, data, tablename);
   end
+  
+  if iscell(data)
+  	%% check for nested cells
+  	tmp=cellfun(@iscell, data);
+  	if sum(tmp(:))~=0
+  		error('nested cells are not supported in this mode')
+		else
+			out=sqlite_save_cell(obj.path, obj.file, data, tablename);
+  	end
+  end
+end
+
+function status = sqlite_save_cell(path, dbfile, data, tablename);
+	%% FIX ME
+	%% disable or fix warning
+	%% warning: sqlite_save_cell: some elements in list of return values are undefined	
+
+	%% command_create_table
+	cct=sprintf('create table [%s] (id INTEGER PRIMARY KEY', tablename);
+	cols=sprintf(' ''');
+	for c=1:size(data,2)
+		cct=[cct sprintf(', c%d TEXT', c)];
+		cols=[cols sprintf('c%d'', ''',c)];
+	end
+	cct=[cct ')'];
+	cols(end-2:end)=[];
+	system(sprintf('%s %s "%s"', path, dbfile, cct));
+	
+	%% write rows to table
+	data=cellfun (@num2str,data,'UniformOutput', false);
+	data=cellfun(@fv, data, 'UniformOutput', false);
+	for r=1:size(data,1)
+		d=[data{r,:}];
+		cct=sprintf('insert into [%s] (%s) values (%s)',tablename, cols, d(1:end-1));
+		system(sprintf('%s %s "%s"', path, dbfile, cct));
+	end
+end
+
+function a = fv(a)
+	a =[' ''' a ''','];
 end
 
 
