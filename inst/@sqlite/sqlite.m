@@ -9,6 +9,8 @@ function obj = sqlite(varargin)
     obj = class(obj, 'sqlite');
     obj.file = sqlite_check(varargin{1});
     obj.path = 'sqlite3';
+    obj.mode = 'ego';
+    obj.prec = 16;
   elseif nargin == 2
       obj = init_fields;
       obj = class(obj, 'sqlite');
@@ -24,6 +26,8 @@ end
 function obj = init_fields()
   obj.file = [];
   obj.path = [];
+  obj.mode = [];
+  obj.prec = [];
 end
 
 function file=sqlite_check(dbfile)
