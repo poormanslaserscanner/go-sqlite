@@ -7,7 +7,8 @@ function [parsed, unparsed]=tables(obj)
     case 1
       [~,unparsed]=system(sprintf('%s %s ".tables"', obj.path, obj.file));
       % parse output into a cell...
-      parsed=regexp(unparsed,'[\w.-_:]+ ','match');
+      parsed=regexp(unparsed,'(  )+','split'); %% separated with 2xchar(32)
+      parsed=cellfun(@strtrim,parsed,'UniformOutput',false);
     otherwise
       print_help
       return
