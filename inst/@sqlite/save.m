@@ -16,7 +16,8 @@ function save(obj, varargin)
 	if strcmp(obj.mode,'coop')
 		status = coop_sqlite(obj, data, tablename);
 	else
-		status = ego_sqlite(obj, data, tablename);
+		disp('todo')
+		% status = ego_sqlite(obj, data, tablename);
 	end
 end
 
