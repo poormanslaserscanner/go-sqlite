@@ -12,14 +12,29 @@ function obj = sqlite(varargin)
     obj.mode = 'ego';
     obj.prec = 16;
   elseif nargin == 2
-      obj = init_fields;
-      obj = class(obj, 'sqlite');
+		obj = init_fields;
+		obj = class(obj, 'sqlite');    
+    %% is argument 2 sqlite3 path?
+		if exist(varargin{2},'dir')==7
       obj.file = sqlite_check_extended(varargin{1},varargin{2});
       if ispc == 1
         obj.path = [varargin{2} '\\sqlite3'];
       else
         obj.path = [varargin{2} '/sqlite3'];
       end
+      obj.mode = 'ego';
+    elseif strcmp(varargin{2},'coop')
+    	obj.file= sqlite_check(varargin{1});
+    	obj.mode = 'coop';
+    	obj.path = 'sqlite3';
+		elseif strcmp(vararagin{2},'ego')
+			obj.file= sqlite_check(varargin{1});
+			obj.mode = 'ego';
+			obj.path = 'sqlite3';
+    else
+    	error('Unknown 2nd input argument')
+    end
+    obj.prec = 16;
   end
 end
 
