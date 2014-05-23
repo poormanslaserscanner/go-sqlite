@@ -10,9 +10,6 @@ function obj = sqlite(varargin)
     obj.file = sqlite_check(varargin{1});
     obj.path = 'sqlite3';
   elseif nargin == 2
-    if strcmp(tolower(varargin{1}),'setup') && strcmp(tolower(varargin{2}),'binary')
-      get_sqlite_binary
-    else
       obj = init_fields;
       obj = class(obj, 'sqlite');
       obj.file = sqlite_check_extended(varargin{1},varargin{2});
@@ -21,7 +18,6 @@ function obj = sqlite(varargin)
       else
         obj.path = [varargin{2} '/sqlite3'];
       end
-    end
   end
 end
 
