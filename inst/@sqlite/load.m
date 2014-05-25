@@ -1,5 +1,69 @@
 function out=load(obj, tablename)
-  if nargin == 1 && nargout == 0
+
+	if strcmp(obj.mode,'coop') 
+		switch (nargin)
+			case 0
+				error('More input arguments needed')
+			case 1
+				if nargout == 0
+					load_coop_all(obj);
+				else
+					out = load_coop_all(obj);
+				end
+			case 2
+				if nargout == 0
+					load_coop(obj,tablename);
+				else
+					out = load_coop(obj, tablename);
+				end
+		end	 
+	else % ego mode
+		switch (nargin)
+			case 0
+				error('More input	arguments needed') 
+			case 1
+				if nargout == 0
+					load_ego_all(obj);
+				else
+					out = load_ego_all(obj);
+				end
+			case 2
+				if nargout == 0
+					load_ego(obj, tablename);
+				else
+					out = load_ego(obj, tablename);
+				end
+		end
+	end
+
+end
+
+function out = load_ego(obj, tablename)
+  [~,available_table]=system(sprintf('%s %s "pragma table_info([%s])"', obj.path, obj.file, tablename));
+  known_go_sqlite_default_matrix=[48,124,105,100,124,73,78,84,69,71,69,82,124,48,124,124,49,10,49,124,103,111,95,115,113,108,105,116,101 ,95,115,101,114,105,97,108,105,122,101,100,124,84,69,88,84,124,48,124,124,48,10];
+
+  if isequal(known_go_sqlite_default_matrix, int8(available_table))
+    command=sprintf('select go_sqlite_serialized from [%s]', tablename);
+  	[~,varout]=system(sprintf('%s %s "%s"', obj.path, obj.file, command));
+		varout = eval(varout);			
+  else
+		
+    % try read table1 into a cell
+    varout = sqlite_table2cell(obj.path, obj.file,tablename);
+  end
+
+	if nargout == 1
+		out = varout;
+	else
+		assignin('base','dasistdochkeinnamefuereinevariable',varout);
+		evalin('base',sprintf('%s = dasistdochkeinnamefuereinevariable;',tablename));
+		evalin('base','clear dasistdochkeinnamefuereinevariable');
+	end
+end
+
+function out = load_coop(obj, tablename)
+
+	if nargin == 1
     %% load all tables in database to the workspace
     [~,tablenames]=system(sprintf('%s %s ".tables"', obj.path, obj.file));
     tablenames=regexp(tablenames,'[\w.-_:]+ ','match');
