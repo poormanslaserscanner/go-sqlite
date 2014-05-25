@@ -14,6 +14,7 @@ roadmap:
   * info ID=1: size(matrix); ID=2: isreal(matrix)
   * set default precision to %.16f _(define in class)_???
    * how to handle this?
+ * create gpl-free
 * version 3.xxxxxx
  * opional c written mex file
  * improve fread, fwrite and fprintf functions
