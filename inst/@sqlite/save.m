@@ -24,12 +24,12 @@ function status = save_ego(obj, data, tablename);
 	path=obj.path;
 	dbfile=obj.file;
 	% create table
-	cct=sprintf('create table [%s] (id INTEGER PRIMARY KEY, ser_val TEXT)', tablename);
+	cct=sprintf('create table [%s] (id INTEGER PRIMARY KEY, go_sqlite_serialized TEXT)', tablename);
 	system(sprintf('%s %s "%s"', path, dbfile, cct));
 
 	% save values 
 	value = serialize(data);
-	cct=sprintf('insert into [%s] (ser_val) values (''%s'')',tablename, value);
+	cct=sprintf('insert into [%s] (go_sqlite_serialized) values (''%s'')',tablename, value);
 	system(sprintf('%s %s "%s"', path, dbfile, cct));
 
 	status = 1;
