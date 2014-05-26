@@ -29,6 +29,8 @@ function status = save_ego(obj, data, tablename);
 
 	% save values 
 	value = serialize(data);
+	% escape single quotas ' due regexrep to ''
+	value = regexprep(value,'''','''''');
 	cct=sprintf('insert into [%s] (go_sqlite_serialized) values (''%s'')',tablename, value);
 	system(sprintf('%s %s "%s"', path, dbfile, cct));
 
