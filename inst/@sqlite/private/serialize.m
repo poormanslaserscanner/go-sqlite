@@ -1,8 +1,6 @@
-%% Matlab Branch of github.com/octave-de/serialize
-%% FIXME: detect ismatrix(rand(3,3,3) in matlab
-%% Should work with GNU Octave as well - some tests needed
+%% Untested(!) Matlab Branch of github.com/octave-de/serialize
+%% Should work with GNU Octave as well
 %% GPLv3 - go https://github.com/octave-de/serialize for more!!
-%% if you use 'ego' mode, you have to accept GPLv3
 
 function ret = serialize(obj)
   %% TODO:
@@ -12,15 +10,26 @@ function ret = serialize(obj)
     ret = serialize_struct(obj);
   elseif (iscell (obj))
     ret = serialize_cell_array(obj);
-  elseif (ismatrix (obj))
+  elseif (is_matrix (obj))
     if (ischar (obj))
       ret = ['char(', serialize_matrix(uint8(obj)), ')'];
     else
       ret = serialize_matrix(obj);
     end
   else
-    error('serialize for class "%s", type "%s" isn''t supported yet', class (obj), typeinfo (obj));
+    error('Unsupported object! :(');
   end
+end
+
+function ret = is_matrix(in)
+	%% let's guess!
+	if ~iscell(in) && numel(size(in))>2
+		ret = 1;
+	elseif ismatrix(in)
+		ret = 1;
+	else
+		ret = 0;
+	end
 end
 
 function ret = serialize_2d_cell(in)
