@@ -112,7 +112,8 @@ function matrix = sqlite_get_matrix(path, dbfile, table)
 	if exist('isoctave')
 		ri=cellfun(@str2double,cell2mat(regexp(ri,'(\d+)','tokens')));
 	else
-		ri=cellfun(@str2double,regexp(ri,'(\d+)','tokens'));
+		ri=regexp(ri,'(\d+)','tokens');
+		ri=cell2mat(cellfun(@str2double,ri{1,1},'UniformOutput',false));
 	end
 	matrix=cellfun (@str2double, matrix(1,2:end-1));
 	matrix=reshape(matrix,ri);
