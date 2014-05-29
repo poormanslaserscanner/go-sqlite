@@ -96,3 +96,14 @@ function save_name = sqlite_save_matrix(path, dbfile, matrix, save_name)
     system(sprintf('%s %s "%s"', path, dbfile, command)); 
   end
 end
+
+function ret = is_matrix(in)
+    %% let's guess! Thank you mathworks!
+    if ~iscell(in) && numel(size(in))>2
+        ret = 1;
+    elseif ismatrix(in)
+        ret = 1;
+    else
+        ret = 0;
+    end
+end
