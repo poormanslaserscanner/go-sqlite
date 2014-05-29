@@ -98,7 +98,7 @@ end
 
 function ret = is_matrix(in)
     %% let's guess! Thank you mathworks!
-    if ~iscell(in) && numel(size(in))>2
+    if ~iscell(in) && ndims(in)>2
         ret = 1;
     elseif ismatrix(in)
         ret = 1;
