@@ -5,18 +5,16 @@ function status = save_coop(obj, data, tablename);
     for n = 1:numel(f)
       %% FIXME
       %% serialize matrix for multidimension matrix
-      if ismatrix(data.(f{n})) && numel(size(data.(f{n})))<=2 && ischar([tablename '.' f{n}])
-        out=sqlite_save_matrix(obj.path, obj.file, data.(f{n}), [tablename '.' f{n}]);
+      if is_matrix(data.(f{n})) && ischar([tablename '.' f{n}])
+        out=sqlite_save_matrix(obj.path, obj.file, data.(f{n}), [tablename '.' f{n}], obj.prec);
       end
     end
   end
 
-	%% is data == matrix
-	%% FIXME: matlab: ismatrix(rand(3,3,3)) = false !!!!
-  if ismatrix(data) && numel(size(data))<=2 && ischar(tablename)
-    out=sqlite_save_matrix(obj.path, obj.file, data, tablename);
+  if is_matrix(data) && ischar(tablename)
+    out=sqlite_save_matrix(obj.path, obj.file, data, tablename, obj.prec);
   end
-  
+
   if iscell(data)
   	%% check for nested cells
   	%% FIXME: if table already exist!!
@@ -60,39 +58,40 @@ function a = fv(a)
 end
 
 
-function save_name = sqlite_save_matrix(path, dbfile, matrix, save_name)
-  reshape_info=size(matrix,1);
-  newmatrix=[reshape(matrix,[],1)];
+function save_name = sqlite_save_matrix(path, dbfile, matrix, save_name, prec)
+  reshape_info=size(matrix);
+  nm=[reshape(matrix,[],1)];
+%%  newmatrix=num2str(newmatrix, prec);
   % create table
-  command_create_table=sprintf('create table [%s] (id INTEGER PRIMARY KEY,  go_sqlite REAL)', save_name);
+  command_create_table=sprintf('create table [%s] (id INTEGER PRIMARY KEY,  go_sqlite TEXT)', save_name);
   system(sprintf('%s %s "%s"', path, dbfile, command_create_table));
   % write reshape info to id=1
-  command=sprintf('insert into [%s] (go_sqlite) values (''%d'')', save_name, reshape_info);
+  command=sprintf('insert into [%s] (go_sqlite) values (''%s'')', save_name, num2str(reshape_info));
   system(sprintf('%s %s "%s"', path, dbfile, command));
   % sqlite is limited at one point, so let's write max. 100 values at ones.
-  if size(newmatrix,1) > 100
-    for n = 0:(floor(size(newmatrix,1)/100)-1)
-      values_string=sprintf('(''%.8f''),',newmatrix((1:100)+(n*100)));
-      values_string=values_string(1:end-1);
-      insert_string=sprintf('insert into [%s] (go_sqlite) values ', save_name);
-      command = [insert_string values_string];
+ 	vs = [];
+ 	insert_string=sprintf('insert into [%s] (go_sqlite) values ', save_name);
+	nm=arrayfun(@fv,nm,prec,'UniformOutput',false);
+	if size(nm,1)>100
+    for n = 0:(floor(size(nm,1)/100)-1)
+    	vs=[nm{((1:100)+(n*100))}];
+    	vs=vs(1:end-1);
+    	command = [insert_string vs];
       system(sprintf('%s %s "%s"', path, dbfile, command));
     end
-    if ((n+1)*100)~=size(newmatrix,1)
+    if ((n+1)*100)~=size(nm,1)
       from=(((n+1)*100)+1);
-      to=size(newmatrix,1);
-      values_string=sprintf('(''%.8f''),',newmatrix(from:to));
-      values_string=values_string(1:end-1);
-      insert_string=sprintf('insert into [%s] (go_sqlite) values ', save_name);
-      command = [insert_string values_string];
+      to=size(nm,1);
+			vs=[nm{(from:to)}];
+			vs=vs(1:end-1);
+      command = [insert_string vs];
       system(sprintf('%s %s "%s"', path, dbfile, command));
     end
       save_name = ['Matrix written to table  ' save_name];
   else
-    values_string=sprintf('(''%.8f''),',newmatrix);
-    values_string=values_string(1:end-1);
-    insert_string=sprintf('insert into [%s] (go_sqlite) values ', save_name);
-    command = [insert_string values_string];
+		vs=[nm{:}];
+		vs=vs(1:end-1);
+    command = [insert_string vs];
     system(sprintf('%s %s "%s"', path, dbfile, command)); 
   end
 end
@@ -106,4 +105,8 @@ function ret = is_matrix(in)
     else
         ret = 0;
     end
+end
+
+function a=fv(a,prec)
+	a=['(''' num2str(a,prec) '''),']; 
 end
