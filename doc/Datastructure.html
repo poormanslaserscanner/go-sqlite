@@ -38,13 +38,16 @@ go_sqlite_serialized TEXT
 <p>Every structname can be another datatype <em>(see Matrix, Cell and Char)</em>.</p>
 <p>The tablenames are equal to the fieldnames.</p>
 <h2>Matrix</h2>
-<p><strong>TODO - not implemented yet!</strong></p>
+<p>The matrix column structure looks like this</p>
 <ol>
 <li>
 id INTEGER PRIMARY KEY
 </li><li>
+go<em>sqlite TEXT
 </li>
 </ol>
+<p>The dimension <em>(reshape)</em> information is saved in <code>go-sqlite</code> where <code>id=1</code>. That's it.</p>
+<p>Furthermore, every number is simple converted to a char/string, using <code>num2str()</code>.</p>
 <h2>Cell</h2>
 <p>A 2D cell is saved as you see. For example:</p>
 <code><pre>
@@ -87,16 +90,6 @@ sqlite> select * from c;
 2|one|two|three
 sqlite> 
 </pre></code>
-<h2>char</h2>
-<p>A char/string will be have two columns</p>
-<p><strong> TODO!!</strong></p>
-<ol>
-<li>
-id INTEGER PRIMARY KEY
-</li><li>
-go_sqlite_string TEXT
-</li>
-</ol>
 
 		</article>
 	</body>

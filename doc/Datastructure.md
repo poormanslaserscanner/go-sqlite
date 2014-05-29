@@ -29,10 +29,14 @@ The tablenames are equal to the fieldnames.
 
 ## Matrix
 
-**TODO - not implemented yet!**
+The matrix column structure looks like this
 
 1. id INTEGER PRIMARY KEY
-2. 
+2. go_sqlite TEXT
+
+The dimension _(reshape)_ information is saved in `go-sqlite` where `id=1`. That's it.
+
+Furthermore, every number is simple converted to a char/string, using `num2str()`.
 
 ## Cell
 
@@ -68,14 +72,4 @@ This is what this cell would look like in sqlite3
     1|1|2|3
     2|one|two|three
     sqlite> 
-
-
-## char
-
-A char/string will be have two columns
-
-** TODO!!**
-
-1. id INTEGER PRIMARY KEY
-2. go\_sqlite\_string TEXT
 
