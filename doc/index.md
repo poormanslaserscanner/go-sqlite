@@ -14,11 +14,10 @@ __go-sqlite__ is a SQLite3 Toolbox/Package for GNU Octave __and__ Matlab!
 ## Versions
 
 * Version 1.140523 - Stable [EOL]
- * `git checkout 46f82e3956`
- * 2.xxxxxx will have complete different table/column structure!
+	* `git checkout 46f82e3956`
 * Version 2.xxxxxx 
- * `git checkout 2`
- * currently under developement
+	* `git checkout -b 2 origin/2`
+	* currently under developement
 
 ## Issues, Patches Questions...
 
