@@ -3,7 +3,7 @@
 #include <string.h>
 #include <inttypes.h>
 
-#include <sqlite3.h>
+#include "sqlite3.h"
 
 #include "mex.h"
 
