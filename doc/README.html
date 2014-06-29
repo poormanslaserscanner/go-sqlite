@@ -28,44 +28,8 @@ sqlite3 binary
 </li>
 </ul>
 <h1>INSTALLATION</h1>
-<p>Download master.zip and extract or clone from github.   Simple add the folder <code>go-sqlite/inst</code> to the search path.</p>
-<code><pre>
->> ls
-go-sqlite
->> ls go-sqlite
-README.md  inst src doc @sqlite
->> addpath('go-sqlite/inst')
-</pre></code>
-<p>Using Linux?  </p>
-<ul>
-<li>
-<code>apt-get install sqlite3</code> or <code>pacman -S sqlite</code>  
-</li>
-</ul>
-<p>If you're using Windows and Matlab, you probably have to use the sqlite-shell binary from sqlite.org.</p>
-<code><pre>
->> path_to_binary=[pwd 'sqlite-shell-win32-x86-3080402']; % absolute path. Should work with relative path too.
->> s=sqlite('new.db', path_to_binary);
-%% or
->> storage=sqlite('another.db', 'C:\sqlite-shell\');
-</pre></code>
-<h1>MODES</h1>
-<p>go-sqlite has two modes</p>
-<h2>coop </h2>
-<p><code>coop</code> <em>(cooperative)</em>: is the nearly the save format from version 1.xxxxxx.    </p>
-<ul>
-<li>
-It's fairly easy to use the tables in other programming languages too. 
-<ul>
-<li>
-A Matrix for exmaple is simply reshaped to a one column matrix. The reshape information <em>(number of rows)</em> is stored at the first place <em>(id=1)</em>.  
-</li><li>
-cells <em>(nested cells are not supported in this mode!)</em> are simply equal stored to the number of rows and columns in a table.  
-</li>
-</ul>
-</li>
-</ul>
-<p>However, the <code>coop</code> mode is more limited than the <code>ego</code> mode</p>
+<p>see <code>install.md</code> in root directory of go-sqlite.</p>
+<h1>FEATURES</h1>
 <p>supports full automatic save and load:</p>
 <ul>
 <li>
@@ -74,7 +38,7 @@ structs:
 <li>
 s.name ✔
 </li><li>
-s.name.more ✘
+s.name.more ✘ ...todo
 </li>
 </ul>
 </li>
@@ -86,55 +50,20 @@ cells:
 <li>
 2D ✔
 </li><li>
-higher than 2D ✘
-</li><li>
-nested cells ✘
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>
-multi-dimensional matrix <em>(real and complex)</em> ✔
-</li><li>
-<p>chars ✔    </p>
-<code><pre>
-        
-</pre></code>
-</li>
-</ul>
-<h2>ego</h2>
-<p><code>ego</code> <em>(egoistic)</em>: is the new save format since version 2.xxxxxx. </p>
-<p>It's designed for best usage in GNU Octave/Matlab. All datatypes are serialized to a json style format. </p>
-<ul>
-<li>
-The benifits are:
-<ul>
-<li>
-multi-dimensional matrix <em>(real and complex)</em> ✔
-</li><li>
-2D cells ✔
-</li><li>
-3D and higher cells ✔
+higher than 2D ✔ 
 </li><li>
 nested cells ✔
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>
+multi-dimensional matrix <em>(real and complex)</em> ✔
 </li><li>
-struct arrays ✔
-<ul>
-<li>
-<code>s.name</code> ✔, <code>s.name.more</code> ✔, ...
+chars ✔    
 </li>
 </ul>
-</li>
-</ul>
-<ul>
-<li>
-chars ✔
-</li>
-</ul>
-</li>
-</ul>
-<p>Howevery, it could be very hard to use those dataformats with other programming languages too <em>(for someone more, for someone less)</em>.    <strong>NOTE:</strong> The serialize function is taken from https://github.com/octave-de/serialize and licened under the GPLv3.</p>
 
 		</article>
 	</body>
