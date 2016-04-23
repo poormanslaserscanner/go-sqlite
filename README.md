@@ -1,3 +1,12 @@
+# !!! YOU SHOULDN'T USE THIS !!!
+
+Use instead one of the following:
+
+* https://github.com/rmartinjak/mex-sqlite3
+* https://github.com/Andy1978/octave-sqlite
+
+
+
 go-sqlite
 =========
 
